@@ -11,5 +11,5 @@ We provide here the LAMMPS input and data files for the following cases:
 - CNT_(5,5)_10_1_aligned
 - CNT_(5,5)_10_8_aligned
 - CNT_(5,5)_16_10_aligned
-- CNT_(5,5)_5.28_aligned
-- CNT_(5,5)_5.28_zigzag
+- CNT_(5,5)_5.28_2_aligned
+- CNT_(5,5)_5.28_2_zigzag
