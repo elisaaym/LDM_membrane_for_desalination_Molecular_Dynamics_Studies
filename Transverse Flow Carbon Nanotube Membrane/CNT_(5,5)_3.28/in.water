@@ -1,5 +1,11 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
+# For Transverse Flow CNT Membrane of the configuration CNT_(5,5)_3.28. Results 
+# are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, R. Lin, K.R. Geethalakshmi, 
+# Nanoscale Fluid Mechanics Working Principles of Transverse Flow Carbon Nanotube Membrane 
+# for Enhanced Desalination, International Journal of Applied Mechanics, 09, 1750034 (2017), 
+# DOI: https://doi.org/10.1142/S175882511750034X 
+
 #SETUP
 
 units  real
@@ -44,24 +50,9 @@ group membrane_boundary id 3220 3221 3224 3225 3228 3229 3341 3342 3345 3346 334
 
 #POTENTIAL MODEL SETTINGS
 
-#settings for TIP3P (long range model):
-#pair_style lj/cut/coul/long 10.0 
-#pair_coeff 1 1 0.102 3.188  
-#pair_coeff 2  2  0.  0.
-#pair_coeff 1  2  0.  0.
-#bond_style  harmonic
-#bond_coeff  1 450 0.9572
-#angle_style harmonic
-#angle_coeff 1 55 104.52
-#kspace_style pppm 1.0e-5 #final npt relaxation
-
-#Settings for TIP4P (long range model)
 #Settings for airebo
 pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 8.5 lj/cut/coul/long 8.5 8.5 airebo 3.0
-#Settings for tersoff
-#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5 tersoff
-#Settings for LJ only
-#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5
+
 pair_modify tail yes
 
 pair_coeff  *  * lj/cut/tip4p/long 0.  0.
@@ -218,35 +209,6 @@ run 100000
 
 write_restart restart.*.system
 
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
 timestep 1
 run 100000
 
