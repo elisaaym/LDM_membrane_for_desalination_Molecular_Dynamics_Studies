@@ -9,7 +9,13 @@ Please cite this article if the LAMMPS input and data files are used.
 We provide here the LAMMPS input and data files for the following cases:
 
 CNT_(5,5)_3.28 NEMD simulations
+
 CNT_(8,8)_3.28 NEMD simulations
+
 CNT_(12,12)_3.28 NEMD simulations
+
 CNT_(16,16)_3.28 NEMD simulations
+
 CNT_(5,5)_3.28 EMD simulations
+
+CNT_(5,5)_3.28 friction
