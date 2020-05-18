@@ -1,4 +1,4 @@
-# Molecular_Dynamics_LDM_membrane_for_desalination
+# Low-Dimensional materials membrane for desalination - MD studies
 This repository includes the LAMMPS input and data file used for my PhD Project from 2016 to 2020. 
 
 Title of PhD Thesis: Analysis and Simulation of Desalination Processes via Advanced Low-Dimensional Material Systems
