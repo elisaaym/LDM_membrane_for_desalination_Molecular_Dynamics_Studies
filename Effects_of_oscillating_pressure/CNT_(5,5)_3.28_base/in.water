@@ -1,5 +1,10 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
+# For study on effects of oscillating pressure for Transverse Flow CNT Membrane. The configuration here is CNT_(5,5)_3.28.
+# Pressure applied is constant. Results are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, R. Lin, Z. Liu, K.R. Geethalakshmi, 
+# Effects of CNT size on the desalination performance of an outer-wall CNT slit membrane, 
+# Physical Chemistry Chemical Physics, 20, 13896-13902 (2018). DOI: 10.1039/C8CP01191E 
+
 #SETUP
 
 units  real
