@@ -1,5 +1,10 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
+# For study on effects of oscillating pressure for Transverse Flow CNT Membrane. The configuration here is CNT_(5,5)_3.28.
+# Pressure applied is sinusoidal. Results are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, Z. Liu, R. Lin, K.R. Geethalakshmi, 
+# Effects of oscillating pressure on desalination performance of transverse flow CNT membrane, Desalination, 
+# 451, 35-44 (2019). DOI: https://doi.org/10.1016/j.desal.2018.03.029 
+
 #SETUP
 
 read_restart restart.8600322.system
