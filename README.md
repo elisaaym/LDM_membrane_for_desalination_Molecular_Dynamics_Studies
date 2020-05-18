@@ -7,6 +7,7 @@ School: Nanyang Technological Unviersity, School of Mechanical and Aerospace Eng
 Year: 2016 to 2020
 
 References publications:
+
 [1] E.Y.M. Ang, T.Y. Ng, J. Yeo, Z. Liu, K.R. Geethalakshmi, Free-standing graphene slit membrane for enhanced desalination, Carbon, 110, 350-355 (2016), DOI: http://dx.doi.org/10.1016/j.carbon.2016.09.043 
 
 [2] E.Y.M. Ang, T.Y. Ng, J. Yeo, R. Lin, K.R. Geethalakshmi, Nanoscale Fluid Mechanics Working Principles of Transverse Flow Carbon Nanotube Membrane for Enhanced Desalination, International Journal of Applied Mechanics, 09, 1750034 (2017), DOI: https://doi.org/10.1142/S175882511750034X 
