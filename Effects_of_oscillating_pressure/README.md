@@ -8,11 +8,11 @@ Please cite this article if the LAMMPS input and data files are used.
 
 We provide here the LAMMPS input and data files for the following cases:
 
-CNT_(5,5)_3.28 base
-CNT_(5,5)_3.28 sin
-CNT_(5,5)_4.28 base
-CNT_(5,5)_4.28 sin
-CNT_(5,5)_5.28 base
-CNT_(5,5)_5.28 sin
-CNT_(5,5)_6.28 base
-CNT_(5,5)_6.28 sin
+- CNT_(5,5)_3.28 base
+- CNT_(5,5)_3.28 sin
+- CNT_(5,5)_4.28 base
+- CNT_(5,5)_4.28 sin
+- CNT_(5,5)_5.28 base
+- CNT_(5,5)_5.28 sin
+- CNT_(5,5)_6.28 base
+- CNT_(5,5)_6.28 sin
