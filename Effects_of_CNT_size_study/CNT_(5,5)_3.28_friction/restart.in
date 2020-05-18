@@ -1,0 +1,246 @@
+# DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
+
+#SETUP
+
+read_restart restart.compress
+
+#VARIABLES DEFINITION
+variable size_H2O_x equal 56.715  #size of feed water in the x direction
+variable size_H2O_y_half equal yhi/2
+variable diameter equal 6.77 #size of CNT membrane
+variable slitsize equal 6.68 #size of slit
+variable centre_x equal ${size_H2O_x}+3+(${diameter}/2) #centre of middle CNT in the x direction
+variable centre_y equal ${slitsize}+${diameter} #centre of middle CNT in the y direction
+variable slip_boundary_radius equal ${diameter}/2+5 #slip area is 5Å more than centre of carbon atoms
+variable end_pos_M equal ${size_H2O_x}+3+${diameter}+3 #Refer to diagram below, to record num of water molecules in membrane
+variable start_pos_M equal ${size_H2O_x} #Refer to diagram below, to record num of water molecules in membrane
+variable start_pos_M_s equal ${size_H2O_x}+3+(${diameter}/2)-1.7 #Refer to diagram below, to record num of water molecules in the smallest area in membrane. 1.7 is due to the radius of carbon atom
+variable end_pos_M_s equal ${size_H2O_x}+3+(${diameter}/2)+1.7 #Refer to diagram below, to record num of water molecules in the smallest area in membrane. 1.7 is due to the radius of carbon atom
+
+
+#Compute number of water and salt molecules in feed and permeate region
+variable num_feed_waters equal "count(watermols,feed)"
+variable num_feed_na equal "count(Na,feed)"
+variable num_feed_cl equal "count(Cl,feed)"
+variable num_perm_waters equal "count(watermols,permeate)" 
+variable num_perm_na equal "count(Na,permeate)"
+variable num_perm_cl equal "count(Cl,permeate)" 
+variable num_mem_waters equal "count(watermols,membrane)"
+variable num_mem_na equal "count(Na,membrane)"
+variable num_mem_cl equal "count(Cl,membrane)"
+variable num_mem_s_waters equal "count(watermols,membrane_small)"
+
+#REGIONS AND GROUP DEFINITIONS
+#Define regions required later to record number of water/salt mol -> water & salt permeability
+region membrane block ${start_pos_M} ${end_pos_M}  0 EDGE 0 EDGE  #membrane region
+region membrane_small block ${start_pos_M_s} ${end_pos_M_s}  0 EDGE 0 EDGE  #smallest channel size membrane region
+region feed block -20 ${start_pos_M} 0 EDGE 0 EDGE units box #feed region
+region permeate block ${end_pos_M} EDGE 0 EDGE 0 EDGE units box #permeate region
+region slip_boundary block ${start_pos_M} ${end_pos_M}  0 ${size_H2O_y_half} 0 EDGE
+
+#Define group
+group water  type 1 2
+group salt   type 3 4
+group watermols type 1
+group Na type 3
+group Cl type 4
+group saltandwater type 1 2 3 4
+group output union saltandwater membrane
+group membrane_boundary id 20521 20522 20525 20526 20529 20530 20785 20786 20789 20790 20793 20794 20797 20798 20801 20802 21266 21267 21270 21271
+group slip_boundary_water dynamic water region slip_boundary every 100 #To define water molecules in the slip region, must be dynamic
+group membrane type 5
+
+
+#Define group for slip boundary tangential friction force computation. Split into 16 segments of equal angle. 16 cause of lammps limitation on the number of groups that can be defined.
+group middle_cnt1 delete 
+group middle_cnt2 delete
+group middle_cnt3 delete
+group middle_cnt4 delete
+group middle_cnt5 delete
+group middle_cnt6 delete
+group middle_cnt7 delete
+group middle_cnt8 delete
+group middle_cnt9 delete
+group middle_cnt10 delete
+group middle_cnt11 delete
+group middle_cnt12 delete
+group middle_cnt13 delete
+group middle_cnt14 delete
+group middle_cnt15 delete
+group middle_cnt16 delete
+
+group middle_cnt2 id 20522 20523 20533 20534 20544 20545 20555 20556 20566 20567 20577 20578 20588 20589 20599 20600 20610 20611 20621 20622 20632 20633 20643 20644 20654 20655 20665 20666 20676 20677 20687 20688 20698 20699 20709 20710 20720 20721 20731 20732 20742 20743 20753 20754 20764 20765 20775 20776
+group middle_cnt3 id 20524 20535 20546 20557 20568 20579 20590 20601 20612 20623 20634 20645 20656 20667 20678 20689 20700 20711 20722 20733 20744 20755 20766 20777                        
+group middle_cnt4 id 20525 20536 20547 20558 20569 20580 20591 20602 20613 20624 20635 20646 20657 20668 20679 20690 20701 20712 20723 20734 20745 20756 20767 20778                        
+group middle_cnt5 id 20526 20527 20537 20538 20548 20549 20559 20560 20570 20571 20581 20582 20592 20593 20603 20604 20614 20615 20625 20626 20636 20637 20647 20648 20658 20659 20669 20670 20680 20681 20691 20692 20702 20703 20713 20714 20724 20725 20735 20736 20746 20747 20757 20758 20768 20769 20779 20780
+group middle_cnt6 id 20528 20539 20550 20561 20572 20583 20594 20605 20616 20627 20638 20649 20660 20671 20682 20693 20704 20715 20726 20737 20748 20759 20770 20781                        
+group middle_cnt7 id 20529 20540 20551 20562 20573 20584 20595 20606 20617 20628 20639 20650 20661 20672 20683 20694 20705 20716 20727 20738 20749 20760 20771 20782                        
+group middle_cnt8 id 20530 20541 20552 20563 20574 20585 20596 20607 20618 20629 20640 20651 20662 20673 20684 20695 20706 20717 20728 20739 20750 20761 20772 20783                        
+group middle_cnt9 id 20795 20815 20835 20855 20875 20895 20915 20935 20955 20975 20995 21015 21035 21055 21075 21095 21115 21135 21155 21175 21195 21215 21235 21255                        
+group middle_cnt10 id 20796 20797 20816 20817 20836 20837 20856 20857 20876 20877 20896 20897 20916 20917 20936 20937 20956 20957 20976 20977 20996 20997 21016 21017 21036 21037 21056 21057 21076 21077 21096 21097 21116 21117 21136 21137 21156 21157 21176 21177 21196 21197 21216 21217 21236 21237 21256 21257
+group middle_cnt11 id 20798 20818 20838 20858 20878 20898 20918 20938 20958 20978 20998 21018 21038 21058 21078 21098 21118 21138 21158 21178 21198 21218 21238 21258                        
+group middle_cnt12 id 20799 20819 20839 20859 20879 20899 20919 20939 20959 20979 20999 21019 21039 21059 21079 21099 21119 21139 21159 21179 21199 21219 21239 21259                        
+group middle_cnt13 id 20800 20801 20820 20821 20840 20841 20860 20861 20880 20881 20900 20901 20920 20921 20940 20941 20960 20961 20980 20981 21000 21001 21020 21021 21040 21041 21060 21061 21080 21081 21100 21101 21120 21121 21140 21141 21160 21161 21180 21181 21200 21201 21220 21221 21240 21241 21260 21261
+group middle_cnt14 id 20802 20822 20842 20862 20882 20902 20922 20942 20962 20982 21002 21022 21042 21062 21082 21102 21122 21142 21162 21182 21202 21222 21242 21262                        
+group middle_cnt15 id 20803 20823 20843 20863 20883 20903 20923 20943 20963 20983 21003 21023 21043 21063 21083 21103 21123 21143 21163 21183 21203 21223 21243 21263                        
+group middle_cnt16 id 20785 20804 20805 20824 20825 20844 20845 20864 20865 20884 20885 20904 20905 20924 20925 20944 20945 20964 20965 20984 20985 21004 21005 21024 21025 21044 21045 21064 21065 21084 21085 21104 21105 21124 21125 21144 21145 21164 21165 21184 21185 21204 21205 21224 21225 21244 21245 21264
+
+
+
+#POTENTIAL MODEL SETTINGS
+
+#settings for TIP3P (long range model):
+#pair_style lj/cut/coul/long 10.0 
+#pair_coeff 1 1 0.102 3.188  
+#pair_coeff 2  2  0.  0.
+#pair_coeff 1  2  0.  0.
+#bond_style  harmonic
+#bond_coeff  1 450 0.9572
+#angle_style harmonic
+#angle_coeff 1 55 104.52
+#kspace_style pppm 1.0e-5 #final npt relaxation
+
+#Settings for TIP4P (long range model)
+#Settings for airebo
+pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 8.5 lj/cut/coul/long 8.5 8.5 airebo 3.0
+#Settings for tersoff
+#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5 tersoff
+#Settings for LJ only
+#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5
+pair_modify tail yes
+
+pair_coeff  *  * lj/cut/tip4p/long 0.  0.
+pair_coeff  *  * lj/cut/coul/long  0.  0.
+pair_coeff * * airebo CH.airebo_real NULL NULL NULL NULL C
+#pair_coeff  *  * tersoff  C.tersoff  NULL NULL NULL NULL C
+pair_coeff 1  1 lj/cut/tip4p/long 0.16275  3.16435
+pair_coeff 2  2 lj/cut/tip4p/long 0.  0.
+pair_coeff 1  2 lj/cut/tip4p/long 0.  0.
+pair_coeff  3  3 lj/cut/coul/long  0.1684 2.452
+pair_coeff  1  3 lj/cut/coul/long  0.1656 2.808175
+pair_coeff  2  3 lj/cut/coul/long  0.  0.
+pair_coeff  4  4 lj/cut/coul/long  0.0117 5.52
+pair_coeff  1  4 lj/cut/coul/long  0.043565 4.342175
+pair_coeff  2  4 lj/cut/coul/long   0 0
+pair_coeff  3  4 lj/cut/coul/long  0.0443 2.808175
+#pair_coeff  5  5 lj/cut/coul/long  0.086 3.4
+pair_coeff  4  5 lj/cut/coul/long  0.031668 4.46
+pair_coeff  3  5 lj/cut/coul/long 0.120356 2.926
+pair_coeff  2  5 lj/cut/coul/long  0.  0.
+#pair_coeff  1  5 lj/cut/coul/long  0.0850 3.4360
+pair_coeff  1  5 lj/cut/coul/long  0.118307 3.282175
+
+kspace_style pppm/tip4p 1.0e-5
+
+#COMPUTATIONAL SETTINGS
+
+neighbor 2.0 bin
+neigh_modify delay 5
+
+
+dump  vmd1 all xyz 1000 saltwater.*.xyz
+dump_modify vmd1 element O H Na Cl C
+
+dump slipboundary slip_boundary_water xyz 1000 slip_boundary.*.xyz
+dump_modify slipboundary element O H Na Cl C 
+
+
+#compute tangential force
+compute friction1 membrane group/group slip_boundary_water
+#compute friction1 middle_cnt1 group/group slip_boundary_water
+#variable f_t1 equal -c_friction1[2]*cos(0.19635)+c_friction1[1]*sin(0.19635)
+#compute friction2 middle_cnt2 group/group slip_boundary_water
+#variable f_t2 equal -c_friction2[2]*cos(0.589049)+c_friction2[1]*sin(0.589049)
+#compute friction3 middle_cnt3 group/group slip_boundary_water
+#variable f_t3 equal -c_friction3[2]*cos(0.981748)+c_friction3[1]*sin(0.981748)
+#compute friction4 middle_cnt4 group/group slip_boundary_water
+#variable f_t4 equal -c_friction4[2]*cos(1.374447)+c_friction4[1]*sin(1.374447)
+#compute friction5 middle_cnt5 group/group slip_boundary_water
+#variable f_t5 equal -c_friction5[2]*cos(1.767146)+c_friction5[1]*sin(1.767146)
+#compute friction6 middle_cnt6 group/group slip_boundary_water
+#variable f_t6 equal -c_friction6[2]*cos(2.159845)+c_friction6[1]*sin(2.159845)
+#compute friction7 middle_cnt7 group/group slip_boundary_water
+#variable f_t7 equal -c_friction7[2]*cos(2.552544)+c_friction7[1]*sin(2.552544)
+#compute friction8 middle_cnt8 group/group slip_boundary_water
+#variable f_t8 equal -c_friction8[2]*cos(2.945246)+c_friction8[1]*sin(2.945243)
+#compute friction9 middle_cnt9 group/group slip_boundary_water
+#variable f_t9 equal c_friction9[2]*cos(3.337942)-c_friction9[1]*sin(3.337942)
+#compute friction10 middle_cnt10 group/group slip_boundary_water
+#variable f_t10 equal c_friction10[2]*cos(3.730641)-c_friction10[1]*sin(3.730641)
+#compute friction11 middle_cnt11 group/group slip_boundary_water
+#variable f_t11 equal c_friction11[2]*cos(4.12334)-c_friction11[1]*sin(4.12334)
+#compute friction12 middle_cnt12 group/group slip_boundary_water
+#variable f_t12 equal c_friction12[2]*cos(4.516039)-c_friction12[1]*sin(4.516039)
+#compute friction13 middle_cnt13 group/group slip_boundary_water
+#variable f_t13 equal c_friction13[2]*cos(4.908739)-c_friction13[1]*sin(4.908739)
+#compute friction14 middle_cnt14 group/group slip_boundary_water
+#variable f_t14 equal c_friction14[2]*cos(5.301438)-c_friction14[1]*sin(5.301438)
+#compute friction15 middle_cnt15 group/group slip_boundary_water
+#variable f_t15 equal c_friction15[2]*cos(5.694137)-c_friction15[1]*sin(5.694137)
+#compute friction16 middle_cnt16 group/group slip_boundary_water
+#variable f_t16 equal c_friction16[2]*cos(6.086836)-c_friction16[1]*sin(6.086839)
+
+variable f_t equal c_friction1[1]
+
+#compute lamda
+variable f_Nevery equal 10
+variable f_Nrepeat equal 500
+variable f_Nfreq equal ${f_Nevery}*${f_Nrepeat}
+fix f_t_cor all ave/correlate ${f_Nevery} ${f_Nrepeat} ${f_Nfreq} v_f_t type auto ave running file friction_autocor.txt
+variable kB equal 1.3806504e-23  # [J/K/ Boltzmann]
+variable kcalmolA2N equal 6.94786e-11
+variable A2m equal 1.0e-10
+variable fs2s equal 1.0e-15
+variable convert equal ${kcalmolA2N}*${kcalmolA2N}/${A2m}/${A2m}*${fs2s}
+variable s_area equal PI*(${diameter}+3.4)*zhi
+variable scale equal ${convert}/(${s_area}*${kB}*300.0)*${f_Nevery}*1
+variable lamda equal trap(f_f_t_cor[3])*${scale}
+
+
+fix 7 all nvt temp 300.0 300.0 100.0
+fix membranefix1 membrane_boundary setforce 0. 0. 0. 
+fix 8 water shake 1e-6 200 0 b 1 a 1
+
+timestep 1
+run 4957
+
+thermo          5000
+thermo_style    custom step temp press vol etotal enthalpy pe ke v_lamda #f_f_t_cor[1][3] f_f_t_cor[3][1] #v_f_t c_friction1[1] c_friction1[2] c_friction2[1] c_friction2[2] c_friction3[1] c_friction3[2] c_friction4[1] c_friction4[2] c_friction5[1] c_friction5[2] c_friction6[1] c_friction6[2] c_friction7[1] c_friction7[2] c_friction8[1] c_friction8[2] c_friction9[1] c_friction9[2] c_friction10[1] c_friction10[2] c_friction11[1] c_friction11[2] c_friction12[1] c_friction12[2] c_friction13[1] c_friction13[2] c_friction14[1] c_friction14[2] c_friction15[1] c_friction15[2] c_friction16[1] c_friction16[2] v_f_t1 v_f_t2 v_f_t3 v_f_t4 v_f_t5 v_f_t6 v_f_t7 v_f_t8 v_f_t9 v_f_t10 v_f_t11 v_f_t12 v_f_t13 v_f_t14 v_f_t15 v_f_t16 v_lamda
+
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+timestep 1
+run 1000000
+
+write_restart restart.*.system
+
+
