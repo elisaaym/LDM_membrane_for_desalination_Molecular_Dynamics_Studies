@@ -1,5 +1,11 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
+# For Graphene Slit Membrane in Free_standing Configuration. Results 
+# are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, Z. Liu, K.R.
+# Geethalakshmi, Free-standing graphene slit membrane for
+# enhanced desalination, Carbon, 110, 350-355 (2016) DOI:     
+# http://dx.doi.org/10.1016/j.carbon.2016.09.043
+
 #SETUP
 
 read_restart restart.compress
@@ -43,30 +49,15 @@ variable atmF  equal (${atmP}*${xarea})
 
 #POTENTIAL MODEL SETTINGS
 
-#settings for TIP3P (long range model):
-#pair_style lj/cut/coul/long 10.0 
-#pair_coeff 1 1 0.102 3.188  
-#pair_coeff	2  2  0.  0.
-#pair_coeff	1  2  0.  0.
-#bond_style  harmonic
-#bond_coeff  1 450 0.9572
-#angle_style harmonic
-#angle_coeff 1 55 104.52
-#kspace_style pppm 1.0e-5 #final npt relaxation
 
-#Settings for TIP4P (long range model)
 #Settings for airebo
 pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 8.5 lj/cut/coul/long 8.5 8.5 airebo 3.0
-#Settings for tersoff
-#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5 tersoff
-#Settings for LJ only
-#pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 lj/cut/coul/long 8.5
+
 pair_modify tail yes
 
 pair_coeff  *  * lj/cut/tip4p/long 0.  0.
 pair_coeff  *  * lj/cut/coul/long  0.  0.
 pair_coeff * * airebo CH.airebo_real NULL NULL NULL NULL C C
-#pair_coeff  *  * tersoff  C.tersoff  NULL NULL NULL NULL C
 pair_coeff	1  1 lj/cut/tip4p/long 0.16275  3.16435
 pair_coeff	2  2 lj/cut/tip4p/long 0.  0.
 pair_coeff	1  2 lj/cut/tip4p/long 0.  0.
@@ -77,18 +68,15 @@ pair_coeff  4  4 lj/cut/coul/long  0.0117 5.52
 pair_coeff  1  4 lj/cut/coul/long  0.043565 4.342175
 pair_coeff  2  4 lj/cut/coul/long   0 0
 pair_coeff  3  4 lj/cut/coul/long  0.0443 2.808175
-#pair_coeff  5  5 lj/cut/coul/long  0.086 3.4
 pair_coeff  4  5 lj/cut/coul/long  0.031668	4.46
 pair_coeff  3  5 lj/cut/coul/long 0.120356	2.926
 pair_coeff  2  5 lj/cut/coul/long  0.  0.
-#pair_coeff  1  5 lj/cut/coul/long  0.0850 3.4360
 pair_coeff  1  5 lj/cut/coul/long  0.118307	3.282175
 pair_coeff 1  6 lj/cut/coul/long  0.118307 3.282175
 pair_coeff 2  6 lj/cut/coul/long  0. 0. 
 pair_coeff 3  6  lj/cut/coul/long  0.120356  2.926
 pair_coeff 4  6 lj/cut/coul/long  0.031668 4.46
 pair_coeff  5  6  lj/cut/coul/long  0 0
-#pair_coeff 6  6  lj/cut/coul/long  0.004295  3.35
 
 kspace_style pppm/tip4p 1.0e-5
 
@@ -138,40 +126,6 @@ run 100000
 
 write_restart restart.*.system
 
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
-
-timestep 1
-run 100000
-
-write_restart restart.*.system
 
 timestep 1
 run 100000
