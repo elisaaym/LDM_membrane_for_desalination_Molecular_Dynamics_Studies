@@ -1,10 +1,5 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
-# For study on effects of CNT size for Transverse Flow CNT Membrane. The configuration here is CNT_(8,8)_3.28 Results 
-# are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, R. Lin, Z. Liu, K.R. Geethalakshmi, 
-# Effects of CNT size on the desalination performance of an outer-wall CNT slit membrane, 
-# Physical Chemistry Chemical Physics, 20, 13896-13902 (2018). DOI: 10.1039/C8CP01191E 
-
 #SETUP
 
 units  real
@@ -17,13 +12,14 @@ read_data data1.system
 
 #REGIONS AND GROUP DEFINITIONS
 #Define piston and membrane regions
-variable size_H2O_x equal 56.715
-variable start_pos_R equal xhi-50
+variable size_H2O_x equal 113.43
+variable diameter equal 10.86
+variable start_pos_R equal xhi-120
 variable start_pos_M equal 3+${size_H2O_x}+3
-variable end_pos_M equal 3+${size_H2O_x}+3+10.856+3
+variable end_pos_M equal 3+${size_H2O_x}+3+${diameter}+3
 variable start_pos_M_b equal 3+${size_H2O_x}
-variable start_pos_M_s equal 3+${size_H2O_x}+3+(10.856/2)-1.7
-variable end_pos_M_s equal 3+${size_H2O_x}+3+(10.856/2)+1.7
+variable start_pos_M_s equal 3+${size_H2O_x}+3+(${diameter}/2)-1.7
+variable end_pos_M_s equal 3+${size_H2O_x}+3+(${diameter}/2)+1.7
 region pistonL block  0  2  0 EDGE 0 EDGE 
 region pistonR block ${start_pos_R} EDGE 0 EDGE 0 EDGE 
 region membrane block ${start_pos_M} ${end_pos_M}  0 EDGE 0 EDGE  
@@ -43,14 +39,26 @@ group watermols type 1
 group Na type 3
 group Cl type 4
 group saltandwater type 1 2 3 4
-group pistonL id 21375:22173
-group pistonR id 23710:24508
+group pistonL id 32681:33479
+group pistonR id 35016:35814
 group output union saltandwater membrane
-group membrane_boundary id 22174 22175 22178 22179 22182 22183 22186 22187 22190 22582 22583 22586 22587 22590 22591 22594 22595 22598 22599 22602 22603 22606 22607 22610 22611 23350 23353 23354 23357 23358 23361 23362
+group membrane_boundary id 33480 33481 33484 33485 33488 33489 33492 33493 33496 33888 33889 33892 33893 33896 33897 33900 33901 33904 33905 33908 33909 33912 33913 33916 33917 34656 34659 34660 34663 34664 34667 34668
 
 
 #POTENTIAL MODEL SETTINGS
 
+#settings for TIP3P (long range model):
+#pair_style lj/cut/coul/long 10.0 
+#pair_coeff 1 1 0.102 3.188  
+#pair_coeff 2  2  0.  0.
+#pair_coeff 1  2  0.  0.
+#bond_style  harmonic
+#bond_coeff  1 450 0.9572
+#angle_style harmonic
+#angle_coeff 1 55 104.52
+#kspace_style pppm 1.0e-5 #final npt relaxation
+
+#Settings for TIP4P (long range model)
 #Settings for airebo
 pair_style hybrid lj/cut/tip4p/long 1 2 1 1 0.1250 8.5 8.5 lj/cut/coul/long 8.5 8.5 airebo 3.0
 #Settings for tersoff
@@ -97,13 +105,13 @@ neigh_modify delay 5
 
 velocity saltandwater create 300.0 1929457 rot yes dist gaussian
 
-#dump  vmd all xyz 1 saltwater.*.xyz
-#dump_modify vmd element O H Na Cl C C
+dump  vmd all xyz 1 saltwater.*.xyz
+dump_modify vmd element O H Na Cl C C
 
 
 minimize 1.0e-4 1.0e-6 10000 10000
 
-#undump vmd
+undump vmd
 
 
 thermo_style    custom step temp press vol etotal #v_press0 v_press1 v_press2 v_press3 v_press4 v_press5 v_press6 v_press7    
@@ -158,8 +166,8 @@ thermo_style    custom step temp press vol etotal enthalpy pe ke v_num_feed_wate
 
 fix membranefix membrane setforce 0. 0. 0. 
 fix pistonfreeze1 pistons setforce NULL 0. 0.
-fix pistonLpush pistonL aveforce 0.15 NULL NULL
-fix pistonRpush pistonR aveforce -0.15 NULL NULL
+fix pistonLpush pistonL aveforce 0.1 NULL NULL
+fix pistonRpush pistonR aveforce -0.1 NULL NULL
 fix 5 water shake 1e-6 200 0 b 1 a 1
 fix 6 all nvt temp 300.0 300.0 100.0
 
@@ -176,8 +184,8 @@ unfix 5
 unfix 6
 fix membranefix1 membrane_boundary setforce 0. 0. 0. 
 fix pistonfreeze2 pistons setforce NULL 0. 0.
-fix pistonLpush1 pistonL aveforce 0.15 NULL NULL
-fix pistonRpush1 pistonR aveforce -0.15 NULL NULL
+fix pistonLpush1 pistonL aveforce 0.1 NULL NULL
+fix pistonRpush1 pistonR aveforce -0.1 NULL NULL
 fix 7 water shake 1e-6 200 0 b 1 a 1
 fix 8 all nvt temp 300.0 300.0 100.0
 
@@ -193,14 +201,17 @@ unfix pistonLpush1
 unfix pistonRpush1 
 unfix 7
 unfix 8 
+
 fix membranefix2 membrane_boundary setforce 0. 0. 0. 
 fix pistonfreeze3 pistons setforce NULL 0. 0.
-fix pistonLpush2 pistonL aveforce 0.25 NULL NULL
-fix pistonRpush2 pistonR aveforce -0.15 NULL NULL
+fix pistonLpush2 pistonL aveforce 0.2 NULL NULL
+fix pistonRpush2 pistonR aveforce -0.1 NULL NULL
 fix 9 water shake 1e-6 200 0 b 1 a 1
 fix 10 all nvt temp 300.0 300.0 100.0
 compute water_vel water chunk/atom bin/1d x 0.0 1.0 units box
 fix water_vel_fix water ave/chunk 100 500 50000 water_vel vx vy vz file velocity.out
+compute salt_CP salt chunk/atom bin/1d x 0.0 5.0 units box
+fix compute_CP salt ave/chunk 200 500 100000 salt_CP density/number file CP.out
 
 
 timestep 1
@@ -217,6 +228,305 @@ timestep 1
 run 100000
 
 write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+
+
+
+
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+
+
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+
+
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+
+
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+
+
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
+timestep 1
+run 100000
+
+write_restart restart.*.system
+timestep 1
+run 100000
+
+write_restart restart.*.system
+
 
 
 
