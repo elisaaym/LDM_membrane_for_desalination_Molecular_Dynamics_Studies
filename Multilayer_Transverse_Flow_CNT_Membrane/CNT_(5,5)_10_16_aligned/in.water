@@ -1,5 +1,10 @@
 # DESALINATION LAMMPS INPUT SCRIPT 21 JAN 2016
 
+# For study on effects of multilayering for Transverse Flow CNT Membrane. The configuration here is CNT_(5,5)_10_16.
+# Results are published at E.Y.M. Ang, T.Y. Ng, J. Yeo, R. Lin, Z. Liu, K.R. Geethalakshmi, 
+# Carbon nanotube arrays as multilayer transverse flow carbon nanotube membrane for efficient desalination, 
+# Journal of Membrane science, 581, 383-392 (2019). DOI: https://doi.org/10.1016/j.memsci.2019.03.062
+
 #SETUP
 
 units  real
