@@ -10,5 +10,6 @@ We provide here the LAMMPS input and data files for the following cases:
 
 - Graphene
 - Borophene
-- MoS2
+- MoS2 S terminated
+- MoS2 Mo terminated
 - MXene
